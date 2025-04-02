@@ -14,52 +14,56 @@ namespace ECS
     {
     public:
         virtual ~ISystem() = default;
-        
-        virtual void update(float deltaTime) = 0;   // 
+
+        virtual void update(float deltaTime) = 0;
         virtual void processEntities() = 0;
     };
 
 }
 
-// Les systèmes n'est autre qu'une façon de gérer les entités dans votre jeu
-// Vous n'êtes pas obligé de faire ça, vous pouvez gérer comme vous le souhaitez
-// mais ça rendra vos vies plus simples
-
-// Exemple d'utilisation :
-//
-// Imaginons que l'on souhaite implémenter un système où l'on gère la vie de nos entités
-//
-// class HealthSystem : public ISystem 
-// {
-// private:
-//     // on renseigne une liste d'entités concernées (nottament ceux qui possède les composants
-//     // concernés... ou blc et vous parcourez vos 42k entities)
-//     std::vector<std::shared_ptr<Entity>> entities; 
-// public:
-//     // une fonction update dans laquelle vous faîtes ce que vous voulez 
-//     void update(float deltaTime) override
-//     {
-//         processEntities();
-//     }
-//
-//     // Une fonction qui gère les entités dans laquelle vous faîtes ce que vous voulez
-//     void processEntities() override
-//     {
-//         for (auto &entity : entities) {
-//             // on accède aux components qu'on veut des entités afin de créer le système
-//             auto health = entity->getComponent<ECS::Components::HealthComponent>(); 
-//
-//             // on applique la logique que l'on veut une fois que vous choppez ce que vous voulez
-//             if (health && health->getHealth() <= 0)
-//                 std::cout << "Dîtes à ma femme que je... att j'ai une femme?'" << std::endl;
-//         }
-//     }
-// };
-
-// Dans le cas où vous avez plusieurs systèmes, aka un JEU
-// vous pouvez créer un SystemManager si vous le souhaitez
-// qui permettra de mettre à jour tous les systems de votre
-// jeu
+/*
+ * ISystem defines the interface for all systems in the ECS architecture.
+ * Systems provide the logic that operates on entities with specific component combinations.
+ *
+ * Key Features:
+ * - Common interface for all system types
+ * - Clear separation of update logic and entity processing
+ * - Support for time-based updates via deltaTime
+ *
+ * Usage example:
+ *
+ * class HealthSystem : public ECS::ISystem
+ * {
+ * private:
+ *     std::vector<std::shared_ptr<Entity>> _entities;
+ *     std::shared_ptr<EntityManager> _entityManager;
+ *
+ * public:
+ *     void initialize(std::shared_ptr<EntityManager> entityManager)
+ *     {
+ *         _entityManager = entityManager;
+ *         // Set up signature to filter relevant entities
+ *         ECS::Signature signature;
+ *         signature.set(componentManager->getComponentType<HealthComponent>());
+ *         _entities = _entityManager->getEntitiesWithSignature(signature);
+ *     }
+ *
+ *     void update(float deltaTime) override
+ *     {
+ *         processEntities();
+ *     }
+ *
+ *     void processEntities() override
+ *     {
+ *         for (auto& entity : _entities) {
+ *             auto health = entity->getComponent<HealthComponent>();
+ *
+ *             if (health && health->getCurrentHealth() <= 0) {
+ *                 // Handle entity death
+ *             }
+ *         }
+ *     }
+ * };
+ */
 
 #endif /* !__ISYSTEM_H__ */
-
