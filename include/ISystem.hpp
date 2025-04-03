@@ -25,11 +25,6 @@ namespace ECS
  * ISystem defines the interface for all systems in the ECS architecture.
  * Systems provide the logic that operates on entities with specific component combinations.
  *
- * Key Features:
- * - Common interface for all system types
- * - Clear separation of update logic and entity processing
- * - Support for time-based updates via deltaTime
- *
  * Usage example:
  *
  * class HealthSystem : public ECS::ISystem

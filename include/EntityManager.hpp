@@ -59,12 +59,6 @@ namespace ECS
  * - Providing access to entities by ID
  * - Managing entity component signatures
  *
- * Key Features:
- * - Efficient entity creation and destruction
- * - O(1) entity lookup by ID
- * - Component signature tracking
- * - Entity filtering by component signature
- *
  * Usage example:
  *
  * // Create entity manager with component manager

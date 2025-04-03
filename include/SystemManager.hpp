@@ -55,12 +55,6 @@ namespace ECS
  * SystemManager handles creation, retrieval, and updating of systems.
  * Systems are responsible for processing entities and implementing game logic.
  *
- * Key Features:
- * - Type-safe system registration and retrieval
- * - Centralized system update mechanism
- * - Support for any number of system types
- * - Efficient system lookup by type
- *
  * Usage example:
  *
  * // Create system manager

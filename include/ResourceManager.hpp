@@ -52,12 +52,6 @@ namespace ECS
  * ResourceManager handles loading and caching game resources like textures, sounds, and fonts.
  * It ensures each resource is loaded only once and provides type-safe access.
  *
- * Key Features:
- * - Efficient resource caching to avoid duplicate loading
- * - Type-safe resource retrieval
- * - Named resource access
- * - Automatic resource cleanup when no longer needed
- *
  * Requirements:
  * - Resource classes must implement a loadFromFile(const std::string& filename) method
  *   that returns bool indicating success or failure

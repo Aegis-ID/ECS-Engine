@@ -55,12 +55,6 @@ namespace ECS
  * EventManager implements a type-safe event system using the observer pattern.
  * It allows components and systems to communicate without direct dependencies.
  *
- * Key Features:
- * - Type-safe event subscription and emission
- * - Runtime event type resolution with no inheritance required
- * - Safe event data sharing via shared pointers
- * - Support for any number of event types without modification
- *
  * Usage example:
  *
  * // Define an event

@@ -134,12 +134,6 @@ namespace ECS
  * - Tracking which entities own which components
  * - Providing efficient component access
  *
- * Key Features:
- * - Type-safe component registration and retrieval
- * - Component pooling for memory efficiency
- * - O(1) component lookup by entity ID
- * - Automatic component cleanup when entities are destroyed
- *
  * Usage example:
  *
  * // Create a component manager

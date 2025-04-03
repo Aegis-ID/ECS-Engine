@@ -96,11 +96,6 @@ namespace ECS
  * IComponentPool defines the interface for component storage pools used by the ECS.
  * ComponentPool<T> implements this interface for a specific component type T.
  *
- * Features:
- * - Smart pointer management for automatic memory cleanup
- * - Component recycling to avoid frequent allocations
- * - O(1) component retrieval by index
- *
  * Usage example:
  *
  * // Create a component pool

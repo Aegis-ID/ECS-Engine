@@ -85,12 +85,6 @@ namespace ECS
  * Entity represents a game object in the ECS architecture.
  * Each entity is essentially an ID with a signature that indicates which components it has.
  *
- * Key Features:
- * - Unique entity identification
- * - Component-based composition
- * - Type-safe component access
- * - Signature tracking for efficient system filtering
- *
  * Usage example:
  *
  * // Create an entity with a component manager
