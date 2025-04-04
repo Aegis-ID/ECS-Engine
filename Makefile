@@ -5,7 +5,7 @@
 ## A Lib Makefile
 ##
 
-NAME	=	ecs.so
+NAME	=	ecs
 
 INCLUDE	=	./include/
 
@@ -16,28 +16,25 @@ SRC		=	$(addprefix src/,	\
 
 CXX			?=	g++
 CPPFLAGS 	= -iquote $(INCLUDE)
-CXXFLAGS 	=	-std=c++20 -Wall -Wextra -Werror -fPIC
-DEBUG		=	-g3
+CXXFLAGS 	=	-std=c++20 -Wall -Wextra -Werror
+
 LDFLAGS		=	-shared
 
 OBJ	=	$(SRC:.cpp=.o)
 
-CP	=	cp
+shared:	CXXFLAGS += -fPIC
+shared:	$(OBJ)
+		$(CXX) $(LDFLAGS) -o $(NAME).so $(OBJ)
 
-all: $(NAME) clean
+static: $(OBJ)
+		$(AR) rcs $(NAME).a $(OBJ)
 
-$(NAME):	$(OBJ)
-			$(CXX) $(LDFLAGS) -o $(NAME) $(OBJ)
 clean:
 		$(RM) $(OBJ)	\
 		$(RM) *log
 
 fclean: clean
-		$(RM) $(NAME)
+		$(RM) $(NAME).a	\
+		$(RM) $(NAME).so	\
 
-re: fclean all
-
-debug:	CXXFLAGS += $(DEBUG)
-debug:	$(NAME)
-
-.PHONY: all clean fclean re
+.PHONY: static shared clean fclean
