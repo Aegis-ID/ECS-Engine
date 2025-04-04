@@ -16,13 +16,12 @@ SRC		=	$(addprefix src/,	\
 
 CXX			?=	g++
 CPPFLAGS 	= -iquote $(INCLUDE)
-CXXFLAGS 	=	-std=c++20 -Wall -Wextra -Werror
+CXXFLAGS 	=	-std=c++20 -Wall -Wextra -Werror -fPIC
 
 LDFLAGS		=	-shared
 
 OBJ	=	$(SRC:.cpp=.o)
 
-shared:	CXXFLAGS += -fPIC
 shared:	$(OBJ)
 		$(CXX) $(LDFLAGS) -o $(NAME).so $(OBJ)
 
