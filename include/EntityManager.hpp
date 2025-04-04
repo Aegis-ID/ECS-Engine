@@ -35,6 +35,8 @@ namespace ECS
 
         std::vector<std::shared_ptr<Entity>> getEntitiesWithSignature(Signature);
         std::shared_ptr<Entity> getEntity(EntityID entityID);
+
+        std::shared_ptr<ComponentManager> getComponentManager() const { return _componentManager; };
     };
 
     template<typename T> void EntityManager::onComponentAdded(EntityID entityID)
