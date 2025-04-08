@@ -372,6 +372,17 @@ Gets an entity by its ID.
 auto player = entityManager->getEntity(playerID);
 ```
 
+##### `std::shared_ptr<ComponentManager> getComponentManager() const`
+Gets the ComponentManager member of the class.
+
+**Returns:**
+- `std::shared_ptr<ComponentManager>` : The member of the class.
+
+**Example**
+```cpp
+auto componentManager = _scene.getComponentManager();
+```
+
 ### SystemManager
 
 The `SystemManager` is responsible for creating, tracking, and updating systems.
