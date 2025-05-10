@@ -1,8 +1,7 @@
 # C++ ECS (Entity Component System)
 
 ## Table of Contents
-1. [Introduction](#introduction)
-2. [Core Concepts](#core-concepts)
+2. [What is an ECS?](#what-is-an-ecs)
 3. [API Reference](#api-reference)
    - [ComponentManager](#componentmanager)
    - [IComponentPool & ComponentPool](#icomponentpool--componentpool)
@@ -13,25 +12,16 @@
    - [EventManager](#eventmanager)
    - [ResourceManager](#resourcemanager)
    - [Scene](#scene)
-4. [Implementation Guide: Snake Game](#implementation-guide-snake-game)
 
-## Introduction
+## What is an ECS?
 
-The Entity Component System (ECS) is an architectural pattern primarily used in game development that focuses on composition over inheritance for maximum flexibility and performance. This ECS framework provides a robust and efficient implementation of this pattern in C++.
-
-Key benefits of this ECS implementation:
-- **Composition-based**: Entities are composed of components, avoiding deep inheritance hierarchies
-- **Data-oriented**: Components are stored in contiguous memory for cache-friendly access
-- **Modular**: Systems operate on specific component combinations
-- **Type-safe**: Template-based design ensures compile-time type checking
-- **Memory-efficient**: Component pooling reduces memory fragmentation
-
-This documentation provides a comprehensive guide to understanding and utilizing this ECS framework for your projects.
-
-## Core Concepts
+The Entity Component System (ECS) is an architectural pattern primarily used in game development that focuses on composition over inheritance for maximum flexibility and performance.
 
 ### Entities
-Entities are the basic objects in your game or application. In this framework, an entity is essentially just an ID with a signature that indicates which components it has. Entities have no behavior of their own.
+Entities are the basic objects in your game or application. Here, an entity is essentially just an ID with a signature that indicates which components it has. Entities have no behavior of their own.
+
+### Signatures
+Signatures are bitsets that track which components an entity has. They enable efficient filtering of entities for systems.
 
 ### Components
 Components are pure data structures that store the attributes of entities. Each component type represents a specific aspect of an entity, such as position, rendering information, or health.
@@ -39,11 +29,8 @@ Components are pure data structures that store the attributes of entities. Each 
 ### Systems
 Systems contain the logic that operates on entities with specific component combinations. Each system processes entities that match its required component signature.
 
-### Signatures
-Signatures are bitsets that track which components an entity has. They enable efficient filtering of entities for systems.
-
 ### Events
-Events allow for communication between different parts of the system without creating direct dependencies. This enables a more decoupled architecture.
+Events allow for communication between different parts of the system without creating direct dependencies.
 
 ## API Reference
 
@@ -51,9 +38,7 @@ Events allow for communication between different parts of the system without cre
 
 The `ComponentManager` is responsible for registering component types, creating component pools, and tracking entity-component associations.
 
-#### Public Member Functions
-
-##### `template<typename T> ComponentType registerComponent()`
+#### `template<typename T> ComponentType registerComponent()`
 Registers a component type in the system and assigns it a unique ID.
 
 **Returns:**
@@ -65,7 +50,7 @@ ECS::ComponentManager componentManager;
 ECS::ComponentType positionType = componentManager.registerComponent<PositionComponent>();
 ```
 
-##### `template<typename T> ComponentType getComponentType()`
+#### `template<typename T> ComponentType getComponentType()`
 Gets the unique ID of a previously registered component type.
 
 **Returns:**
@@ -79,7 +64,7 @@ Gets the unique ID of a previously registered component type.
 ECS::ComponentType healthType = componentManager.getComponentType<HealthComponent>();
 ```
 
-##### `template<typename T> std::shared_ptr<ComponentPool<T>> getComponentPool()`
+#### `template<typename T> std::shared_ptr<ComponentPool<T>> getComponentPool()`
 Gets the component pool for a specific component type.
 
 **Returns:**
@@ -93,7 +78,7 @@ Gets the component pool for a specific component type.
 auto positionPool = componentManager.getComponentPool<PositionComponent>();
 ```
 
-##### `template<typename T> void setComponentOwner(std::shared_ptr<T>, EntityID)`
+#### `template<typename T> void setComponentOwner(std::shared_ptr<T>, EntityID)`
 Associates a component with an entity.
 
 **Parameters:**
@@ -106,7 +91,7 @@ auto position = positionPool->create();
 componentManager.setComponentOwner<PositionComponent>(position, entityID);
 ```
 
-##### `template<typename T> std::shared_ptr<T> getEntityComponent(EntityID)`
+#### `template<typename T> std::shared_ptr<T> getEntityComponent(EntityID)`
 Gets a component for a specific entity.
 
 **Parameters:**
@@ -120,7 +105,7 @@ Gets a component for a specific entity.
 auto health = componentManager.getEntityComponent<HealthComponent>(playerID);
 ```
 
-##### `template<typename T> void removeEntityComponent(EntityID)`
+#### `template<typename T> void removeEntityComponent(EntityID)`
 Removes a component from an entity.
 
 **Parameters:**
@@ -135,9 +120,7 @@ componentManager.removeEntityComponent<TemporaryEffectComponent>(enemyID);
 
 `IComponentPool` defines the interface for component storage, while `ComponentPool<T>` implements efficient storage and retrieval for a specific component type.
 
-#### Public Member Functions
-
-##### `std::shared_ptr<T> create()`
+#### `std::shared_ptr<T> create()`
 Creates a new component in the pool.
 
 **Returns:**
@@ -148,7 +131,7 @@ Creates a new component in the pool.
 auto position = positionPool->create();
 ```
 
-##### `void destroy(std::size_t index)`
+#### `void destroy(std::size_t index)`
 Destroys a component at the specified index.
 
 **Parameters:**
@@ -159,7 +142,7 @@ Destroys a component at the specified index.
 positionPool->destroy(componentIndex);
 ```
 
-##### `std::vector<std::shared_ptr<T>> getAllActive()`
+#### `std::vector<std::shared_ptr<T>> getAllActive()`
 Gets all active components in the pool.
 
 **Returns:**
@@ -170,7 +153,7 @@ Gets all active components in the pool.
 auto allPositions = positionPool->getAllActive();
 ```
 
-##### `size_t getIndex(const std::shared_ptr<T> &component)`
+#### `size_t getIndex(const std::shared_ptr<T> &component)`
 Gets the index of a component in the pool.
 
 **Parameters:**
@@ -184,7 +167,7 @@ Gets the index of a component in the pool.
 size_t index = positionPool->getIndex(position);
 ```
 
-##### `std::shared_ptr<T> getByIndex(size_t index)`
+#### `std::shared_ptr<T> getByIndex(size_t index)`
 Gets a component by its index.
 
 **Parameters:**
@@ -202,9 +185,7 @@ auto position = positionPool->getByIndex(componentIndex);
 
 The `Entity` class represents an individual game object that can have multiple components.
 
-#### Public Member Functions
-
-##### `void setID(EntityID id)`
+#### `void setID(EntityID id)`
 Sets the unique ID of the entity.
 
 **Parameters:**
@@ -215,7 +196,7 @@ Sets the unique ID of the entity.
 entity->setID(nextEntityID++);
 ```
 
-##### `EntityID getID() const`
+#### `EntityID getID() const`
 Gets the unique ID of the entity.
 
 **Returns:**
@@ -226,7 +207,7 @@ Gets the unique ID of the entity.
 EntityID id = entity->getID();
 ```
 
-##### `Signature getSignature() const`
+#### `Signature getSignature() const`
 Gets the component signature of the entity.
 
 **Returns:**
@@ -237,7 +218,7 @@ Gets the component signature of the entity.
 Signature signature = entity->getSignature();
 ```
 
-##### `template<typename T> void addComponent()`
+#### `template<typename T> void addComponent()`
 Adds a component of type T to the entity.
 
 **Example:**
@@ -245,7 +226,7 @@ Adds a component of type T to the entity.
 entity->addComponent<PositionComponent>();
 ```
 
-##### `template<typename T> void removeComponent()`
+#### `template<typename T> void removeComponent()`
 Removes a component of type T from the entity.
 
 **Example:**
@@ -253,7 +234,7 @@ Removes a component of type T from the entity.
 entity->removeComponent<TemporaryEffectComponent>();
 ```
 
-##### `template<typename T> std::shared_ptr<T> getComponent()`
+#### `template<typename T> std::shared_ptr<T> getComponent()`
 Gets a component of type T from the entity.
 
 **Returns:**
@@ -264,7 +245,7 @@ Gets a component of type T from the entity.
 auto position = entity->getComponent<PositionComponent>();
 ```
 
-##### `template<typename T> bool hasComponent() const`
+#### `template<typename T> bool hasComponent() const`
 Checks if the entity has a component of type T.
 
 **Returns:**
@@ -281,9 +262,7 @@ if (entity->hasComponent<CollisionComponent>()) {
 
 The `EntityManager` is responsible for creating, tracking, and destroying entities.
 
-#### Public Member Functions
-
-##### `EntityManager(std::shared_ptr<ComponentManager> componentManager)`
+#### `EntityManager(std::shared_ptr<ComponentManager> componentManager)`
 Constructor that takes a component manager.
 
 **Parameters:**
@@ -295,7 +274,7 @@ auto componentManager = std::make_shared<ECS::ComponentManager>();
 auto entityManager = std::make_shared<ECS::EntityManager>(componentManager);
 ```
 
-##### `std::shared_ptr<Entity> createEntity()`
+#### `std::shared_ptr<Entity> createEntity()`
 Creates a new entity.
 
 **Returns:**
@@ -306,7 +285,7 @@ Creates a new entity.
 auto player = entityManager->createEntity();
 ```
 
-##### `void destroyEntity(EntityID)`
+#### `void destroyEntity(EntityID)`
 Destroys an entity with the specified ID.
 
 **Parameters:**
@@ -317,7 +296,7 @@ Destroys an entity with the specified ID.
 entityManager->destroyEntity(enemyID);
 ```
 
-##### `template<typename T> void onComponentAdded(EntityID entityID)`
+#### `template<typename T> void onComponentAdded(EntityID entityID)`
 Updates the entity signature when a component is added.
 
 **Parameters:**
@@ -329,7 +308,7 @@ entity->addComponent<PositionComponent>();
 entityManager->onComponentAdded<PositionComponent>(entity->getID());
 ```
 
-##### `template<typename T> void onComponentRemoved(EntityID entityID)`
+#### `template<typename T> void onComponentRemoved(EntityID entityID)`
 Updates the entity signature when a component is removed.
 
 **Parameters:**
@@ -341,7 +320,7 @@ entity->removeComponent<TemporaryEffectComponent>();
 entityManager->onComponentRemoved<TemporaryEffectComponent>(entity->getID());
 ```
 
-##### `std::vector<std::shared_ptr<Entity>> getEntitiesWithSignature(Signature)`
+#### `std::vector<std::shared_ptr<Entity>> getEntitiesWithSignature(Signature)`
 Gets all entities that match a specific component signature.
 
 **Parameters:**
@@ -358,7 +337,7 @@ signature.set(componentManager->getComponentType<RenderComponent>());
 auto renderableEntities = entityManager->getEntitiesWithSignature(signature);
 ```
 
-##### `std::shared_ptr<Entity> getEntity(EntityID entityID)`
+#### `std::shared_ptr<Entity> getEntity(EntityID entityID)`
 Gets an entity by its ID.
 
 **Parameters:**
@@ -372,7 +351,7 @@ Gets an entity by its ID.
 auto player = entityManager->getEntity(playerID);
 ```
 
-##### `std::shared_ptr<ComponentManager> getComponentManager() const`
+#### `std::shared_ptr<ComponentManager> getComponentManager() const`
 Gets the ComponentManager member of the class.
 
 **Returns:**
@@ -387,9 +366,7 @@ auto componentManager = _scene.getComponentManager();
 
 The `SystemManager` is responsible for creating, tracking, and updating systems.
 
-#### Public Member Functions
-
-##### `template<typename T> std::shared_ptr<T> registerSystem()`
+#### `template<typename T> std::shared_ptr<T> registerSystem()`
 Registers a system of type T.
 
 **Returns:**
@@ -400,7 +377,7 @@ Registers a system of type T.
 auto movementSystem = systemManager->registerSystem<MovementSystem>();
 ```
 
-##### `template<typename T> std::shared_ptr<T> getSystem()`
+#### `template<typename T> std::shared_ptr<T> getSystem()`
 Gets a system of type T.
 
 **Returns:**
@@ -411,7 +388,7 @@ Gets a system of type T.
 auto renderSystem = systemManager->getSystem<RenderSystem>();
 ```
 
-##### `void addSystem(std::shared_ptr<ISystem> system)`
+#### `void addSystem(std::shared_ptr<ISystem> system)`
 Adds a system to the manager.
 
 **Parameters:**
@@ -423,7 +400,7 @@ auto customSystem = std::make_shared<CustomSystem>();
 systemManager->addSystem(customSystem);
 ```
 
-##### `void update(float deltaTime)`
+#### `void update(float deltaTime)`
 Updates all systems.
 
 **Parameters:**
@@ -439,9 +416,7 @@ systemManager->update(deltaTime);
 
 The `ISystem` interface defines the basic structure for all systems.
 
-#### Public Member Functions
-
-##### `virtual void update(float deltaTime) = 0`
+#### `virtual void update(float deltaTime) = 0`
 Updates the system with the elapsed time.
 
 **Parameters:**
@@ -454,7 +429,7 @@ void MovementSystem::update(float deltaTime) override {
 }
 ```
 
-##### `virtual void processEntities() = 0`
+#### `virtual void processEntities() = 0`
 Processes all entities that match the system's requirements.
 
 **Example:**
@@ -476,9 +451,7 @@ void MovementSystem::processEntities() override {
 
 The `EventManager` implements a type-safe event system using the observer pattern.
 
-#### Public Member Functions
-
-##### `template<typename EventType> void subscribe(std::function<void(const EventType &)>)`
+#### `template<typename EventType> void subscribe(std::function<void(const EventType &)>)`
 Subscribes to events of a specific type.
 
 **Parameters:**
@@ -491,7 +464,7 @@ eventManager->subscribe<CollisionEvent>([](const CollisionEvent& event) {
 });
 ```
 
-##### `template<typename EventType> void emit(const EventType &)`
+#### `template<typename EventType> void emit(const EventType &)`
 Emits an event of a specific type.
 
 **Parameters:**
@@ -507,9 +480,7 @@ eventManager->emit(collision);
 
 The `ResourceManager` handles loading, caching, and retrieving game resources.
 
-#### Public Member Functions
-
-##### `template<typename T> std::shared_ptr<T> load(const std::string &name, const std::string &filename)`
+#### `template<typename T> std::shared_ptr<T> load(const std::string &name, const std::string &filename)`
 Loads a resource from a file and caches it with a name.
 
 **Parameters:**
@@ -524,7 +495,7 @@ Loads a resource from a file and caches it with a name.
 auto texture = resourceManager->load<Texture>("player", "assets/player.png");
 ```
 
-##### `template<typename T> std::shared_ptr<T> get(const std::string &name)`
+#### `template<typename T> std::shared_ptr<T> get(const std::string &name)`
 Gets a previously loaded resource by name.
 
 **Parameters:**
@@ -540,11 +511,9 @@ auto texture = resourceManager->get<Texture>("player");
 
 ### Scene
 
-The `Scene` class brings together all parts of the ECS to create a complete game scene.
+The `Scene` class brings together all parts of the ECS to create a complete game scene. (This is just an implementation example, you'll have to create your own)
 
-#### Public Member Functions
-
-##### `Scene()`
+#### `Scene()`
 Default constructor that initializes all managers.
 
 **Example:**
@@ -552,7 +521,7 @@ Default constructor that initializes all managers.
 ECS::Scene scene;
 ```
 
-##### `void initialize()`
+#### `void initialize()`
 Initializes the scene by registering components and systems.
 
 **Example:**
@@ -560,7 +529,7 @@ Initializes the scene by registering components and systems.
 scene.initialize();
 ```
 
-##### `void load(const std::string &filename)`
+#### `void load(const std::string &filename)`
 Loads a scene from a file.
 
 **Parameters:**
@@ -571,7 +540,7 @@ Loads a scene from a file.
 scene.load("level1.scn");
 ```
 
-##### `void save(const std::string &filename)`
+#### `void save(const std::string &filename)`
 Saves a scene to a file.
 
 **Parameters:**
@@ -582,7 +551,7 @@ Saves a scene to a file.
 scene.save("savegame.scn");
 ```
 
-##### `void update(float deltaTime)`
+#### `void update(float deltaTime)`
 Updates the scene.
 
 **Parameters:**
@@ -593,7 +562,7 @@ Updates the scene.
 scene.update(0.016f);
 ```
 
-##### `std::shared_ptr<EntityManager> getEntityManager()`
+#### `std::shared_ptr<EntityManager> getEntityManager()`
 Gets the entity manager.
 
 **Returns:**
@@ -604,7 +573,7 @@ Gets the entity manager.
 auto entityManager = scene.getEntityManager();
 ```
 
-##### `std::shared_ptr<ComponentManager> getComponentManager()`
+#### `std::shared_ptr<ComponentManager> getComponentManager()`
 Gets the component manager.
 
 **Returns:**
@@ -615,7 +584,7 @@ Gets the component manager.
 auto componentManager = scene.getComponentManager();
 ```
 
-##### `std::shared_ptr<SystemManager> getSystemManager()`
+#### `std::shared_ptr<SystemManager> getSystemManager()`
 Gets the system manager.
 
 **Returns:**
@@ -626,7 +595,7 @@ Gets the system manager.
 auto systemManager = scene.getSystemManager();
 ```
 
-##### `std::shared_ptr<EventManager> getEventManager()`
+#### `std::shared_ptr<EventManager> getEventManager()`
 Gets the event manager.
 
 **Returns:**
@@ -636,9 +605,3 @@ Gets the event manager.
 ```cpp
 auto eventManager = scene.getEventManager();
 ```
-
-## Implementation Guide: Snake Game
-
-This section demonstrates how to use the ECS framework to implement a simple Snake game. Rather than providing a complete implementation, we'll focus on the core concepts and show how to use the ECS components, systems, and events to create a basic game architecture.
-
-(Peak incoming...)
