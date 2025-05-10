@@ -25,13 +25,12 @@ namespace ECS
         Signature _signature;
         std::shared_ptr<ComponentManager> _componentManager;
     public:
-        Entity(std::shared_ptr<ComponentManager> componentManager)
-            : _componentManager(componentManager) {}
+        Entity(std::shared_ptr<ComponentManager> componentManager);
 
-        void setID(EntityID id) { _id = id; }
-        EntityID getID() const { return _id; }
+        void setID(EntityID id);
+        EntityID getID() const;
 
-        Signature getSignature() const { return _signature; }
+        Signature getSignature() const;
 
         template<typename T> void addComponent();
         template<typename T> void removeComponent();

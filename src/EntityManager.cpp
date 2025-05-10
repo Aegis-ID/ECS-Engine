@@ -9,6 +9,9 @@
 
 namespace ECS
 {
+    EntityManager::EntityManager(std::shared_ptr<ComponentManager> componentManager)
+        : _componentManager(componentManager) {}
+
     std::shared_ptr<Entity> EntityManager::createEntity()
     {
         auto entity = std::make_shared<Entity>(_componentManager);
@@ -44,4 +47,9 @@ namespace ECS
             return nullptr;
         return _entities[entityID];
     }
+
+    std::shared_ptr<ComponentManager> EntityManager::getComponentManager() const 
+    { 
+        return _componentManager; 
+    };
 }

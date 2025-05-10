@@ -10,6 +10,7 @@ NAME	=	ecs
 INCLUDE	=	./include/
 
 SRC		=	$(addprefix src/,	\
+			Entity.cpp	\
 			EntityManager.cpp	\
 			SystemManager.cpp	\
 			)	\
