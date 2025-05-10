@@ -12,6 +12,9 @@
 
 namespace Utils
 {
+    Logger *Logger::_instance = nullptr;
+    std::mutex Logger::_mutex;
+
     Logger::Logger()
         :   _logLevel(LogLevel::INFO), _consoleOutput(true) {}
 
@@ -24,6 +27,8 @@ namespace Utils
     {
         std::lock_guard<std::mutex> lock(_mutex);
 
+        if (!_instance)
+            _instance = new Logger();
         return *_instance;
     }
 

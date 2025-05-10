@@ -28,7 +28,7 @@ namespace Utils
     class Logger
     {
     private:
-        static std::unique_ptr<Logger> _instance;
+        static Logger *_instance;
         static std::mutex _mutex;
 
         LogLevel _logLevel;
