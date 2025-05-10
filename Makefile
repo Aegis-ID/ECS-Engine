@@ -7,16 +7,15 @@
 
 NAME	=	ecs
 
-INCLUDE	=	./include/
-
 SRC		=	$(addprefix src/,	\
-			Entity.cpp	\
-			EntityManager.cpp	\
-			SystemManager.cpp	\
+			ECS/Entity.cpp	\
+			ECS/EntityManager.cpp	\
+			ECS/SystemManager.cpp	\
+			Utils/Logger.cpp	\
 			)	\
 
 CXX			?=	g++
-CPPFLAGS 	= -iquote $(INCLUDE)
+CPPFLAGS 	= -I include/
 CXXFLAGS 	=	-std=c++20 -Wall -Wextra -Werror -fPIC
 
 LDFLAGS		=	-shared
