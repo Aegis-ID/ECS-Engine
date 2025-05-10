@@ -11,6 +11,7 @@ SRC		=	$(addprefix src/,	\
 			ECS/Entity.cpp	\
 			ECS/EntityManager.cpp	\
 			ECS/SystemManager.cpp	\
+			Engine/Scene.cpp	\
 			Utils/Logger.cpp	\
 			)	\
 

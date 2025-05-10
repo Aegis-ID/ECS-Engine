@@ -15,7 +15,6 @@
 
 namespace Engine
 {
-    // This is a scene implementation example
     class Scene
     {
     private:
@@ -24,31 +23,18 @@ namespace Engine
         std::shared_ptr<ECS::SystemManager> _systemManager;
         std::shared_ptr<ECS::EventManager> _eventManager;
     public:
-        Scene()
-        {
-            _componentManager = std::make_shared<ECS::ComponentManager>();
-            _entityManager = std::make_shared<ECS::EntityManager>(_componentManager);
-            _systemManager = std::make_shared<ECS::SystemManager>();
-            _eventManager = std::make_shared<ECS::EventManager>();
-        }
+        Scene();
+        ~Scene() = default;
 
         void initialize();
-        // Register all component types
-        // Example:
-        // _componentManager.registerComponent<Components::PositionComponent>();
-        //
-        // Register all systems
-        // Example:
-        // _systemManager.registerSystem<MovementSystem>();
-
         void load(const std::string &filename);
         void save(const std::string &filename);
         void update(float deltaTime);
 
-        std::shared_ptr<ECS::EntityManager> getEntityManager() { return _entityManager; }
-        std::shared_ptr<ECS::ComponentManager> getComponentManager() { return _componentManager; }
-        std::shared_ptr<ECS::SystemManager> getSystemManager() { return _systemManager; }
-        std::shared_ptr<ECS::EventManager> getEventManager() { return _eventManager; }
+        std::shared_ptr<ECS::EntityManager> getEntityManager();
+        std::shared_ptr<ECS::ComponentManager> getComponentManager();
+        std::shared_ptr<ECS::SystemManager> getSystemManager();
+        std::shared_ptr<ECS::EventManager> getEventManager();
 
         // TODO: Implement factory methods for creating common entity types
         // Example :
