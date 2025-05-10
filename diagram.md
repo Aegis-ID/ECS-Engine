@@ -1,3 +1,5 @@
+```plantuml
+
 @startuml "ECS Framework Architecture"
 
 ' Style settings
@@ -231,3 +233,5 @@ RenderSystem o-- ResourceManager
 "PositionComponent" --> "Vec2<T>" : uses
 
 @enduml
+
+```
