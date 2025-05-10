@@ -1,9 +1,8 @@
-# C++ ECS (Entity Component System)
+# ECS documentation
 
 ## Table of Contents
 1. [What is an ECS?](#what-is-an-ecs)
-2. [Architecture Overview](#diagram)
-3. [API Reference](#api-reference)
+2. [Code Reference](#code-reference)
    - [ComponentManager](#componentmanager)
    - [IComponentPool & ComponentPool](#icomponentpool--componentpool)
    - [Entity](#entity)
@@ -11,8 +10,6 @@
    - [SystemManager](#systemmanager)
    - [ISystem](#isystem)
    - [EventManager](#eventmanager)
-   - [ResourceManager](#resourcemanager)
-   - [Scene](#scene)
 
 ## What is an ECS?
 
@@ -33,11 +30,7 @@ Systems contain the logic that operates on entities with specific component comb
 ### Events
 Events allow for communication between different parts of the system without creating direct dependencies.
 
-## Architecture Overview
-
-![ECS UML Diagram](https://www.plantuml.com/plantuml/img/hLZTJoCt47_FNs7nSg4agBsyHIWwod5jf7A70BMFoEmEYONtexOt4EwkVtl77xjhxteJ4BoWC5-U6S_yPhoVfA92LHaVZJwGQxNbG2GenVAL7Ca7bfTKq8oKD7cWAx1y0OcY-Og39v1mAkMfKeBTLGgMIP5VisSWlteYdEMWjYMGGgXruJ7acgR58vv8xYcNC1gvqyZ1-Tar-O8Yy5Y8XmFoVKJ81t9M220iLo3kQG8IQSq_P7bMP6MHGwukYu8R1KAEo7yXVNmu9vk2fSZzEGhrhxTIGUOfMeAdeSbLcL85unIueZSiWpcvvmLLeL0f2dHFdkUAAGQoUwWEnFb4CffZl1d-H8P9PSkyC3pXN9gIsnoUr0tcSTxAw7zhjaxn1ItdfCeBaOA0z3QZvOactx8yXQT9gBUe5HC_HRAh7-XCz9rfJgd4IPZRHMCFTE1RBuvoZysGQVAsNNx6ix2IRfKpV8Jbjs9u9wBHFhbPwEJsit54Lg02yWj5TI1Er0kqowuTafxcjySSX5PjiXcOk5bC2BZ0vgGECQmRTEGyJ9ss5zKAB3VfoOeDlDI2Nv6sy0wwOHwqfTS4XUMnGHGen4dWGdFtD55i0sTzyJjT8hNKlG1OvYd3DfcJVokeuCJTjOib4Q3xR23I5AGInNPigdhkogINorFEJuqtfW47dJQoIsrfyEeEwpDQXT-tLgNhGjTTr_4syR5sTvmcqonjhwccIRRAgQe4Tlvr_RDtCmukueNhc5xXBZ-F_QDwsKF-OSSJGsySqEpGcoD2qxJRd9vLMw0x1FnEx7TXS_rhAhjYkhh2QhQUHp7qlDSF0N8nw66W1qcjFvRObdvpIplKcuGjtdH_jZsisKwMd5TXfpZ9VG1KvCs1fsaAwJxmwEXScVjzaLODTPZhVvXQjqKLA_Le-mRPzx1pBrws2NAzwIP_f3SjfrT3qf2ZIEYs1gyed8cTOtdGG3lpB7b7K-ZMt2U3xUcs6klMF7RoAnUU6k0s0-kCOVHIkAPvoa7qEqLBBzD9dTe_hToNAaSaB_9sybPtCi6L4wo6MMV6pYYwwCJ3K21ZoXU7ZK7wXjABwGfaKGbS3YDXrRnUPC8nUg5X8-Ac6rosFgu92TDgMYUdEikrz3tZu5E6Rx-hEpoChXF8eq5PnlStG5Ep_SLK0aZkTKXVFcY_rlvcm2E_qkgyi1mnXdASpfrHexCzZYJN4v4KLuVT8Yzw3ZJGv7oB0dR7RtyInjM6HaE30t6rI4wjXvl1axfvTLNqj-bGKYd63OwtUoHoFdhhun711Ud6_TosFxNO-D3_v-bsGpaAJCZM_QhPHGc2ud57sZTdlyEQ3hD-wRFIGcbYxKj6LrWfLGe-4TitQsgdLVTNPgJENX3gSn3rp8zw5ebwGfxtn3yRZdys7FziCFv455BsfLwKbba0BbV0gSPUkMQbhedEm_pan_5nvAMXTNiFts8w7H1rIxCMw6grRD-CfKHPCGFXuDTIRZeQfa79gAhF34uAE87rKCThjT5Fxtl87mX1P9cLt02sIN3xLQJ-c01FL4leh2DOLOaY1vU5P5gu4GegrO1LMwtrl-OcQmjNW3kAYEWhtAHnEVlgWQFZFB9KhKFhQs2hjGffd6urWhDSzNOnBnBNQ1UuMUhGhO3tCcrNzZqxucj7q_jyx77ksoo-oNaHRXo1-vrjv9q2iFkdTdmyzC60SoQnlDvsAwyPwEyGKhA6vA5nFV9vpkwo_HfiT8n0smcsh7xhlPOj_MEFNhgcT4F51B08mBNByPEkeS0WHkk0VGvUceOQrtqzQLfwrmEnVab2jereJh1nAM-QUR-XRtTIqOH3r9QF2vCG4dPPthd3_ONLmyTS__qQNTDCwkglksRwX53IvVgTskLrwbrRRcw3JAS_5XRADJqy19cB61YZe7-U5UiYhXcDmS63vYAYnySB4XOkcPkdaDG31iU7dlpJUj28O7gtmUdXr06PKU1vJ60K6p_6zMP3n4UIn1ORVK9RLSR_1m00)
-
-## API Reference
+## Code Reference
 
 ### ComponentManager
 
@@ -479,134 +472,4 @@ Emits an event of a specific type.
 ```cpp
 CollisionEvent collision = { player->getID(), enemy->getID() };
 eventManager->emit(collision);
-```
-
-### ResourceManager
-
-The `ResourceManager` handles loading, caching, and retrieving game resources.
-
-#### `template<typename T> std::shared_ptr<T> load(const std::string &name, const std::string &filename)`
-Loads a resource from a file and caches it with a name.
-
-**Parameters:**
-- `name`: The name to associate with the resource
-- `filename`: The file to load the resource from
-
-**Returns:**
-- `std::shared_ptr<T>`: The loaded resource
-
-**Example:**
-```cpp
-auto texture = resourceManager->load<Texture>("player", "assets/player.png");
-```
-
-#### `template<typename T> std::shared_ptr<T> get(const std::string &name)`
-Gets a previously loaded resource by name.
-
-**Parameters:**
-- `name`: The name of the resource
-
-**Returns:**
-- `std::shared_ptr<T>`: The resource, or nullptr if not found
-
-**Example:**
-```cpp
-auto texture = resourceManager->get<Texture>("player");
-```
-
-### Scene
-
-The `Scene` class brings together all parts of the ECS to create a complete game scene. (This is just an implementation example, you'll have to create your own)
-
-#### `Scene()`
-Default constructor that initializes all managers.
-
-**Example:**
-```cpp
-ECS::Scene scene;
-```
-
-#### `void initialize()`
-Initializes the scene by registering components and systems.
-
-**Example:**
-```cpp
-scene.initialize();
-```
-
-#### `void load(const std::string &filename)`
-Loads a scene from a file.
-
-**Parameters:**
-- `filename`: The file to load the scene from
-
-**Example:**
-```cpp
-scene.load("level1.scn");
-```
-
-#### `void save(const std::string &filename)`
-Saves a scene to a file.
-
-**Parameters:**
-- `filename`: The file to save the scene to
-
-**Example:**
-```cpp
-scene.save("savegame.scn");
-```
-
-#### `void update(float deltaTime)`
-Updates the scene.
-
-**Parameters:**
-- `deltaTime`: The time elapsed since the last update
-
-**Example:**
-```cpp
-scene.update(0.016f);
-```
-
-#### `std::shared_ptr<EntityManager> getEntityManager()`
-Gets the entity manager.
-
-**Returns:**
-- `std::shared_ptr<EntityManager>`: The entity manager
-
-**Example:**
-```cpp
-auto entityManager = scene.getEntityManager();
-```
-
-#### `std::shared_ptr<ComponentManager> getComponentManager()`
-Gets the component manager.
-
-**Returns:**
-- `std::shared_ptr<ComponentManager>`: The component manager
-
-**Example:**
-```cpp
-auto componentManager = scene.getComponentManager();
-```
-
-#### `std::shared_ptr<SystemManager> getSystemManager()`
-Gets the system manager.
-
-**Returns:**
-- `std::shared_ptr<SystemManager>`: The system manager
-
-**Example:**
-```cpp
-auto systemManager = scene.getSystemManager();
-```
-
-#### `std::shared_ptr<EventManager> getEventManager()`
-Gets the event manager.
-
-**Returns:**
-- `std::shared_ptr<EventManager>`: The event manager
-
-**Example:**
-```cpp
-auto eventManager = scene.getEventManager();
 ```

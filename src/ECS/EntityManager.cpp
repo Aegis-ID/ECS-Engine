@@ -5,7 +5,7 @@
 ** EntityManager
 */
 
-#include "../include/EntityManager.hpp"
+#include "ECS/EntityManager.hpp"
 
 namespace ECS
 {

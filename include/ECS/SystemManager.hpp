@@ -12,7 +12,6 @@
     #include <vector>
     #include <typeindex>
     #include <unordered_map>
-
     #include "ISystem.hpp"
 
 namespace ECS

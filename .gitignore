@@ -53,4 +53,4 @@ dkms.conf
 
 # special
 .editorconfig
-diagram.md
+.vscode/

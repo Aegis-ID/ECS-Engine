@@ -14,7 +14,6 @@
     #include <memory>
     #include <typeindex>
     #include <unordered_map>
-
     #include "IComponentPool.hpp"
 
 namespace ECS
