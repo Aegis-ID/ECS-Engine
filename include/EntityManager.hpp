@@ -24,8 +24,7 @@ namespace ECS
         std::unordered_map<EntityID, Signature> _signatures;
         std::shared_ptr<ComponentManager> _componentManager;
     public:
-        EntityManager(std::shared_ptr<ComponentManager> componentManager)
-            : _componentManager(componentManager) {}
+        EntityManager(std::shared_ptr<ComponentManager> componentManager);
 
         std::shared_ptr<Entity> createEntity();
         void destroyEntity(EntityID);
@@ -36,7 +35,7 @@ namespace ECS
         std::vector<std::shared_ptr<Entity>> getEntitiesWithSignature(Signature);
         std::shared_ptr<Entity> getEntity(EntityID entityID);
 
-        std::shared_ptr<ComponentManager> getComponentManager() const { return _componentManager; };
+        std::shared_ptr<ComponentManager> getComponentManager() const;
     };
 
     template<typename T> void EntityManager::onComponentAdded(EntityID entityID)

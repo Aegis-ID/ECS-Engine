@@ -13,6 +13,8 @@
     #include "EventManager.hpp"
     #include "ComponentManager.hpp"
 
+// This is a scene implementation example
+
 namespace ECS
 {
     class Scene
@@ -54,7 +56,7 @@ namespace ECS
         // std::shared_ptr<Entity> createCharacter(float x, float y);
         // std::shared_ptr<Entity> createObstacle(float x, float y, float width, float height);
         // [...]
-   };
+    };
 }
 
 /*
