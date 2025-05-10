@@ -10,7 +10,6 @@
 
     #include <unordered_map>
     #include <vector>
-
     #include "Entity.hpp"
     #include "ComponentManager.hpp"
 

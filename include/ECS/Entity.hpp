@@ -11,7 +11,6 @@
     #include <cstdint>
     #include <bitset>
     #include <memory>
-
     #include "ComponentManager.hpp"
 
 namespace ECS

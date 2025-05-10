@@ -5,9 +5,7 @@
 ** SystemManager
 */
 
-#include <memory>
-
-#include "../include/SystemManager.hpp"
+#include "ECS/SystemManager.hpp"
 
 namespace ECS
 {
