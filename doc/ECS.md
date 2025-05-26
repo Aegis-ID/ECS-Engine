@@ -9,7 +9,6 @@
    - [EntityManager](#entitymanager)
    - [SystemManager](#systemmanager)
    - [ISystem](#isystem)
-   - [EventManager](#eventmanager)
 
 ## What is an ECS?
 
@@ -26,9 +25,6 @@ Components are pure data structures that store the attributes of entities. Each 
 
 ### Systems
 Systems contain the logic that operates on entities with specific component combinations. Each system processes entities that match its required component signature.
-
-### Events
-Events allow for communication between different parts of the system without creating direct dependencies.
 
 ## Code Reference
 
@@ -443,23 +439,6 @@ void MovementSystem::processEntities() override {
         }
     }
 }
-```
-
-### EventManager
-
-The `EventManager` implements a type-safe event system using the observer pattern.
-
-#### `template<typename EventType> void subscribe(std::function<void(const EventType &)>)`
-Subscribes to events of a specific type.
-
-**Parameters:**
-- `handler`: A function to handle the event
-
-**Example:**
-```cpp
-eventManager->subscribe<CollisionEvent>([](const CollisionEvent& event) {
-    std::cout << "Collision between " << event.entity1 << " and " << event.entity2 << std::endl;
-});
 ```
 
 #### `template<typename EventType> void emit(const EventType &)`
