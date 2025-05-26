@@ -11,10 +11,11 @@
     #include <memory>
     #include <queue>
     #include <vector>
-    #include <stdexcept>
 
 namespace ECS
 {
+    using ComponentID = std::size_t;
+
     class IComponentPool
     {
     public:
@@ -24,100 +25,78 @@ namespace ECS
     template<typename T> class ComponentPool : public IComponentPool
     {
     private:
-        std::vector<std::shared_ptr<T>> _components;
+        std::vector<std::unique_ptr<T>> _components;
         std::vector<bool> _activeComponents;
-        std::queue<std::size_t> _freeIndices;
-
+        std::queue<ComponentID> _freeIndices;
     public:
-        std::shared_ptr<T> create();
-        void destroy(std::size_t index);
-
-        std::vector<std::shared_ptr<T>> getAllActive();
-        size_t getIndex(const std::shared_ptr<T> &component);
-        std::shared_ptr<T> getByIndex(size_t index);
+        ComponentID create();
+        template<typename... Args> ComponentID create(Args&&... args);
+        void destroy(ComponentID id);
+        std::vector<ComponentID> getAllActiveIndices();
+        T *getComponentWithIndex(ComponentID id);
     };
 
-    template<typename T> std::shared_ptr<T> ComponentPool<T>::create()
+    template<typename T> ComponentID ComponentPool<T>::create()
     {
-        std::size_t index;
+        ComponentID id;
 
         if (!_freeIndices.empty()) {
-            index = _freeIndices.front();
+            id = _freeIndices.front();
             _freeIndices.pop();
-            _components[index] = std::make_shared<T>();
+            _components[id] = std::make_unique<T>();
         } else {
-            index = _components.size();
-            _components.push_back(std::make_shared<T>());
+            id = _components.size();
+            _components.push_back(std::make_unique<T>());
             _activeComponents.push_back(true);
         }
-        _activeComponents[index] = true;
-        return _components[index];
+        _activeComponents[id] = true;
+        return id;
     }
 
-    template<typename T> void ComponentPool<T>::destroy(std::size_t index)
+    template<typename T>
+    template<typename... Args>
+    ComponentID ComponentPool<T>::create(Args&&... args)
     {
-        if (index >= _components.size() || !_activeComponents[index])
-            return;
-        _activeComponents[index] = false;
-        _freeIndices.push(index);
+        ComponentID id;
+
+        if (!_freeIndices.empty()) {
+            id = _freeIndices.front();
+            _freeIndices.pop();
+            _components[id] = std::make_unique<T>(std::forward<Args>(args)...);
+        } else {
+            id = _components.size();
+            _components.push_back(std::make_unique<T>(std::forward<Args>(args)...));
+            _activeComponents.push_back(true);
+        }
+        _activeComponents[id] = true;
+        return id;
     }
 
-    template<typename T> std::vector<std::shared_ptr<T>> ComponentPool<T>::getAllActive()
+    template<typename T> void ComponentPool<T>::destroy(ComponentID id)
+    {
+        if (id >= _components.size() || !_activeComponents[id])
+            return;
+        _activeComponents[id] = false;
+        _freeIndices.push(id);
+    }
+
+    template<typename T> std::vector<ComponentID> ComponentPool<T>::getAllActiveIndices()
     {
         std::vector<std::shared_ptr<T>> activeComponents;
 
-        for (std::size_t i = 0; i < _components.size(); ++i)
+        for (ComponentID i = 0; i < _components.size(); ++i)
             if (_activeComponents[i])
                 activeComponents.push_back(_components[i]);
         return activeComponents;
     }
 
-    template<typename T> std::size_t ComponentPool<T>::getIndex(const std::shared_ptr<T>& component)
-    {
-        if (!component)
-            throw std::runtime_error("Null component pointer");
-
-        for (size_t i = 0; i < _components.size(); ++i)
-            if (_components[i] == component && _activeComponents[i])
-                return i;
-        throw std::runtime_error("Invalid component pointer or inactive component");
-    }
-
     template<typename T>
-    std::shared_ptr<T> ComponentPool<T>::getByIndex(size_t index)
+    T *ComponentPool<T>::getComponentWithIndex(ComponentID id)
     {
-        if (index >= _components.size() || !_activeComponents[index])
+        if (id >= _components.size() || !_activeComponents[id])
             return nullptr;
-        return _components[index];
+        return _components[id].get();
     }
 }
-
-/*
- * IComponentPool defines the interface for component storage pools used by the ECS.
- * ComponentPool<T> implements this interface for a specific component type T.
- *
- * Usage example:
- *
- * // Create a component pool
- * auto positionPool = std::make_shared<ECS::ComponentPool<PositionComponent>>();
- *
- * // Create a component
- * auto position = positionPool->create();
- * position->x = 100.0f;
- * position->y = 200.0f;
- *
- * // Get index for component lookup
- * size_t index = positionPool->getIndex(position);
- *
- * // Retrieve component by index
- * auto samePosition = positionPool->getByIndex(index);
- *
- * // Get all active components
- * auto allPositions = positionPool->getAllActive();
- *
- * // Destroy component when no longer needed
- * // (Usually handled automatically when shared_ptr reference count reaches zero)
- * positionPool->destroy(index);
- */
 
 #endif /* !__ICOMPONENTPOOL_H__ */

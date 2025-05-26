@@ -20,11 +20,11 @@ namespace ECS
     {
     private:
         using EventId = std::size_t;
-        using HandlerFunction = std::function<void(const std::shared_ptr<void>&)>;
+        using HandlerFunction = std::function<void(const std::unique_ptr<void>)>;
         std::unordered_map<EventId, std::vector<HandlerFunction>> _handlers;
     public:
         template<typename EventType> void subscribe(std::function<void(const EventType &)>);
-        template<typename EventType> void emit(const EventType &);
+        template<typename EventType> void emit(EventType);
     };
 
     template<typename EventType>
@@ -39,43 +39,17 @@ namespace ECS
     }
 
     template<typename EventType>
-    void EventManager::emit(const EventType &event)
+    void EventManager::emit(EventType event)
     {
         auto eventId = typeid(EventType).hash_code();
 
         if (_handlers.find(eventId) == _handlers.end())
             return;
-        auto eventPtr = std::make_shared<EventType>(event);
-        for (auto &handler : _handlers[eventId])
-            handler(eventPtr);
+        for (auto &handler : _handlers[eventId]) {
+            auto eventPtr = std::make_unique<EventType>(std::move(event));
+            handler(std::move(eventPtr));
+        }
     }
 }
-
-/*
- * EventManager implements a type-safe event system using the observer pattern.
- * It allows components and systems to communicate without direct dependencies.
- *
- * Usage example:
- *
- * // Define an event
- * struct CollisionEvent {
- *     EntityID entity1;
- *     EntityID entity2;
- * };
- *
- * // Create event manager
- * ECS::EventManager eventManager;
- *
- * // Subscribe to event
- * eventManager.subscribe<CollisionEvent>([](const CollisionEvent& event) {
- *     std::cout << "Collision between " << event.entity1 << " and " << event.entity2 << std::endl;
- * });
- *
- * // Emit an event
- * CollisionEvent collision = { player->getID(), enemy->getID() };
- * eventManager.emit(collision);
- *
- * // Events are automatically cleaned up after all handlers are called
- */
 
 #endif /* !__EVENTMANAGER_H__ */

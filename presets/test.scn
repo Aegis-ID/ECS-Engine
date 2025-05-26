@@ -1,0 +1,84 @@
+# -----------------------  SCENE FOR TESTING -----------------------
+
+scene = "test";       
+
+camera:
+{
+    main = (
+    {
+        width = 800;
+        height = 600;
+        pos_x = 0;
+        pos_y = 3;
+        pos_z = 2; 
+        rot_x = 6;
+        rot_y = 6;
+        rot_z = 0;
+        fov = 60.0;
+    });
+};
+
+primitives:
+{
+    sphere = (
+    {
+        pos_x = -2.5;
+        pos_y = 3.3;
+        pos_z = -5.5;
+        r = 255;
+        g = 128;
+        b = 0;
+        radius = 1;
+        rot_x = 15;
+        rot_y = 5;
+        rot_z = 0; # rotation random
+    });
+
+    cylinder = (
+    {
+        pos_x = 3.2;
+        pos_y = 1.1;
+        pos_z = -6;      # translation aléatoire
+        r = 0;
+        g = 255;
+        b = 0;
+        radius = 0.5;
+        height = 2;
+        #size = 0;
+        rot_x = 0;
+        rot_y = 30;
+        rot_z = 15; # rotation random
+    });
+
+    cone = (
+    {
+        pos_x = 1.7;
+        pos_y = 1.8;
+        pos_z = -3.7;    # translation aléatoire
+        r = 0;
+        g = 0;
+        b = 255;
+        radius = 1;
+        height = 2;
+        size = 0;
+        rotX = 10;
+        rotY = 0;
+        rotZ = 45; # rotation random
+    });
+
+    cubes =
+    {
+        x = "-1.2"; y = "1.5"; z = "-4";     # translation aléatoire
+        r = "0"; g = "0"; b = "80";
+        radius = "0"; height = "0"; size = "2";
+        rotX = "0"; rotY = "0"; rotZ = "0"; # rotation random
+    };
+};
+
+lights = (
+    {
+      point   = { x = "0";   y = "-1";  z = "-2"; };
+      diffuse = { r = "1";   g = "1";   b = "1";  };
+      ambient = "0.55";
+    }
+);

@@ -12,15 +12,15 @@ namespace ECS
     EntityManager::EntityManager(std::shared_ptr<ComponentManager> componentManager)
         : _componentManager(componentManager) {}
 
-    std::shared_ptr<Entity> EntityManager::createEntity()
+    EntityID EntityManager::createEntity()
     {
-        auto entity = std::make_shared<Entity>(_componentManager);
+        auto entity = std::make_unique<Entity>(_componentManager);
 
-        entity->setID(_nextEntityID);
-        _entities[_nextEntityID] = entity;
-        _signatures[_nextEntityID] = Signature();
-        _nextEntityID++;
-        return entity;
+        EntityID id = _nextEntityID++;
+        entity->setID(id);
+        _entities[id] = std::move(entity);
+        _signatures[id] = Signature();
+        return id;
     }
 
     void EntityManager::destroyEntity(EntityID entityID)
@@ -31,25 +31,31 @@ namespace ECS
         _signatures.erase(entityID);
     }
 
-    std::vector<std::shared_ptr<Entity>> EntityManager::getEntitiesWithSignature(Signature signature)
+    std::vector<EntityID> EntityManager::getEntitiesWithSignature(Signature signature)
     {
-        std::vector<std::shared_ptr<Entity>> matchingEntities;
+        std::vector<EntityID> matchingEntities;
 
         for (auto &[id, entitySignature] : _signatures)
             if ((entitySignature & signature) == signature)
-                matchingEntities.push_back(_entities[id]);
+                matchingEntities.push_back(id);
         return matchingEntities;
     }
 
-    std::shared_ptr<Entity> EntityManager::getEntity(EntityID entityID)
+    Entity *EntityManager::getEntity(EntityID id) const
     {
-        if (_entities.find(entityID) == _entities.end())
-            return nullptr;
-        return _entities[entityID];
+        auto it = _entities.find(id);
+        if (it != _entities.end())
+            return it->second.get();
+        return nullptr;
     }
 
-    std::shared_ptr<ComponentManager> EntityManager::getComponentManager() const 
+        std::shared_ptr<ComponentManager> EntityManager::getComponentManager() const 
     { 
         return _componentManager; 
     };
+
+    const std::unordered_map<EntityID, std::unique_ptr<Entity>> &EntityManager::getAllEntities() const
+    {
+        return _entities;
+    }
 }

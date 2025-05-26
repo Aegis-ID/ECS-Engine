@@ -31,19 +31,19 @@ namespace ECS
 
         Signature getSignature() const;
 
-        template<typename T> void addComponent();
+        template<typename T, typename... Args> void addComponent(Args&&... args);
         template<typename T> void removeComponent();
         template<typename T> std::shared_ptr<T> getComponent();
         template<typename T> bool hasComponent() const;
     };
 
-    template<typename T> void Entity::addComponent()
+    template<typename T, typename... Args> void Entity::addComponent(Args&&... args)
     {
         if (!_componentManager)
             return;
         _signature.set(_componentManager->getComponentType<T>());
 
-        auto component = _componentManager->getComponentPool<T>()->create();
+        auto component = _componentManager->getComponentPool<T>()->create(std::forward<Args>(args)...);
 
         _componentManager->setComponentOwner<T>(component, _id);
     }
@@ -78,34 +78,5 @@ namespace ECS
         return _signature[_componentManager->getComponentType<T>()];
     }
 }
-
-/*
- * Entity represents a game object in the ECS architecture.
- * Each entity is essentially an ID with a signature that indicates which components it has.
- *
- * Usage example:
- *
- * // Create an entity with a component manager
- * auto entity = std::make_shared<ECS::Entity>(componentManager);
- * entity->setID(entityID);
- *
- * // Add components
- * entity->addComponent<PositionComponent>();
- * entity->addComponent<RenderComponent>();
- *
- * // Check for a component
- * if (entity->hasComponent<CollisionComponent>()) {
- *     // Handle collision
- * }
- *
- * // Get a component
- * auto position = entity->getComponent<PositionComponent>();
- * if (position) {
- *     position->x += 10.0f;
- * }
- *
- * // Remove a component
- * entity->removeComponent<TemporaryEffectComponent>();
- */
 
 #endif /* !__ENTITY_H__ */

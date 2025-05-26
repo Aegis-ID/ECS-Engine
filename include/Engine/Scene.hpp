@@ -8,10 +8,11 @@
 #ifndef __SCENE_H__
     #define __SCENE_H__
 
-    #include "../ECS/EntityManager.hpp"
-    #include "../ECS/SystemManager.hpp"
-    #include "../ECS/EventManager.hpp"
-    #include "../ECS/ComponentManager.hpp"
+    #include "ECS/EntityManager.hpp"
+    #include "ECS/ComponentManager.hpp"
+    #include "ECS/SystemManager.hpp"
+    #include "ECS/EventManager.hpp"
+    #include "Engine/Types.hpp"
 
 namespace Engine
 {
@@ -22,60 +23,33 @@ namespace Engine
         std::shared_ptr<ECS::EntityManager> _entityManager;
         std::shared_ptr<ECS::SystemManager> _systemManager;
         std::shared_ptr<ECS::EventManager> _eventManager;
+
+        std::shared_ptr<ECS::ComponentManager> createDefaultComponentManager();
+        std::shared_ptr<ECS::EntityManager> createDefaultEntityManager(
+        std::shared_ptr<ECS::ComponentManager> &componentManager);
+        std::shared_ptr<ECS::SystemManager> createDefaultSystemManager();
+        std::shared_ptr<ECS::EventManager> createDefaultEventManager();
+
+        std::string _name;
+
     public:
-        Scene();
-        ~Scene() = default;
+        Scene(const std::string &name);
+        ~Scene();
 
-        void initialize();
-        void load(const std::string &filename);
-        void save(const std::string &filename);
-        void update(float deltaTime);
-
+        const std::string getName() const;
         std::shared_ptr<ECS::EntityManager> getEntityManager();
         std::shared_ptr<ECS::ComponentManager> getComponentManager();
         std::shared_ptr<ECS::SystemManager> getSystemManager();
         std::shared_ptr<ECS::EventManager> getEventManager();
 
-        // TODO: Implement factory methods for creating common entity types
-        // Example :
-        // std::shared_ptr<Entity> createCharacter(float x, float y);
-        // std::shared_ptr<Entity> createObstacle(float x, float y, float width, float height);
-        // [...]
+        void update(float deltaTime);
+
+        std::shared_ptr<ECS::Entity> createEntity(Entity::EntityType type,
+            const std::string &entityName, const Entity::EntityConfig &params = {});
+
+        std::shared_ptr<ECS::ISystem> createSystem(System::SystemType type,
+            const std::string &systemName, const System::SystemConfig &params = {});
     };
 }
-
-/*
- * Scene is a high-level container outside of the ECS, that brings together 
- * all of it's parts. It manages entities, components, and systems, and can
- * provides factory methods for creating common entity types.
- *
- * Usage example:
- *
- * // Create a scene
- * ECS::Scene scene;
- * scene.initialize();
- *
- * // Create entities
- * auto player = scene.createCharacter(100.0f, 100.0f);
- * auto obstacle = scene.createObstacle(200.0f, 200.0f, 50.0f, 50.0f);
- *
- * // Add custom components
- * player->addComponent<WeaponComponent>();
- * scene.getEntityManager().onComponentAdded<WeaponComponent>(player->getID());
- *
- * // Create a custom system
- * auto collisionSystem = scene.getSystemManager().registerSystem<CollisionSystem>();
- * collisionSystem->setEntityManager(scene.getEntityManager());
- *
- * // Game loop
- * float deltaTime = 0.016f;
- * while (gameRunning) {
- *     scene.update(deltaTime);
- *     // Render
- * }
- *
- * // Save scene state
- * scene.save("savegame.qqch");
- */
 
 #endif /* !__SCENE_H__ */

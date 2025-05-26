@@ -16,7 +16,6 @@
 
 namespace Engine
 {
-
     class IResource
     {
     public:
@@ -156,38 +155,5 @@ namespace Engine
     }
 }
 
-/*
- * ResourceManager handles loading, caching, and lifecycle management for game resources 
- * like textures, sounds, and fonts. It is NOT part of the ECS architecture.
- * 
- * It provides resources to various systems but doesn't process entities itself.
- *
- * Usage example:
- *
- * // Example texture resource implementation
- * class Texture : public Engine::IResource 
- * {
- *     [...]
- * };
- *
- * // Access the resource manager
- * auto &resourceManager = Engine::ResourceManager::getInstance();
- *
- * // Load a texture
- * auto texture = resourceManager.load<Texture>("player", "assets/player.png");
- *
- * // In a rendering system:
- * class RenderSystem : public ECS::ISystem 
- * {
- * public:
- *     void update(float deltaTime) override 
- *     {
- *         auto &resourceManager = Engine::ResourceManager::getInstance();
- *         auto texture = resourceManager.get<Texture>("player");
- *         
- *         // Use texture for rendering entities
- *     }
- * };
- */
 
 #endif /* !__RESOURCEMANAGER_H__ */

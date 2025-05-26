@@ -1,0 +1,57 @@
+scene = "example";                      # name of the scene
+
+# Entity section
+camera:                                 # Mandatory Entity Type
+{
+    main = (                            # Entity name
+    {
+        width = 1280;
+        height = 720;
+        pos_x = 0;
+        pos_y = -100;
+        pos_z = 20;
+        rot_x = 0;
+        rot_y = 0;
+        rot_z = 0;
+        fov = 72.5;
+    });
+};
+
+primitive:                              # Entity type
+{
+    sphere = (                          # Entity name
+    {
+        x = 0;
+        y = 0;
+        z = 0;
+        r = 255;
+        g = 255;
+        b = 255;
+    },
+    {                                   # can handle multiple config of the same Entity
+        x = 50;
+        y = 50;
+        z = 50;
+        r = 254;
+        g = 254;
+        b = 254;
+    });
+};
+
+# System section
+rendering:                              # System Type  
+{
+    opengl = (                          # System name
+    {
+        vsync = true;
+        shadow_resolution = 2048;
+        # etc...
+    });
+
+    postprocessing = (                  # Another system of the same type
+    {
+        chromatic_aberration = false;   # -> I'm no racist...
+        motion_blur = false;
+        # etc...
+    });
+};

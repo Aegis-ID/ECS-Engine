@@ -12,235 +12,43 @@
 
 namespace Math
 {
-    class Vector3D
+    class Vec3
     {
     public:
         double x, y, z;
-        ~Vector3D() = default;
-        Vector3D()  :   x(0), y(0), z(0) {}
-        Vector3D(double x, double y, double z)
-            :   x(x), y(y), z(z) {}
+        Vec3() : x(0), y(0), z(0) {}
+        Vec3(double xx, double yy, double zz) : x(xx), y(yy), z(zz) {}
 
-        Vector3D operator+(const Vector3D &other) const
-        {
-            return Vector3D(x + other.x, y + other.y, z + other.z);
+        Vec3 operator + (const Vec3& v) const { return Vec3(x+v.x, y+v.y, z+v.z); }
+        Vec3 operator - (const Vec3& v) const { return Vec3(x-v.x, y-v.y, z-v.z); }
+        Vec3 operator * (double s) const { return Vec3(x*s, y*s, z*s); }
+        Vec3 operator - () const { return Vec3(-x, -y, -z); }
+        Vec3 operator / (double scalar) const { return Vec3(x / scalar, y / scalar, z / scalar); }
+
+        double dot(const Vec3& v) const { return x*v.x + y*v.y + z*v.z; }
+
+        Vec3 cross(const Vec3& v) const {
+            return Vec3(
+                y * v.z - z * v.y,
+                z * v.x - x * v.z,
+                x * v.y - y * v.x
+            );
         }
 
-        Vector3D operator-(const Vector3D &other) const
-        {
-            return Vector3D(x - other.x, y - other.y, z - other.z);
+        Vec3 operator * (const Vec3 &v) const {
+            return Vec3(x*v.x, y*v.y, z*v.z);
         }
 
-        Vector3D operator*(const Vector3D &other) const
-        {
-            return Vector3D(x * other.x, y * other.y, z * other.z);
-        }
-
-        Vector3D operator*(double scalar) const
-        {
-            return Vector3D(x * scalar, y * scalar, z * scalar);
-        }
-
-        Vector3D operator/(const Vector3D &other) const
-        {
-            return Vector3D(x / other.x, y / other.y, z / other.z);
-        }
-
-        Vector3D operator/(double div) const
-        {
-            return Vector3D(x / div, y / div, z / div);
-        }
-
-        Vector3D &operator+=(const Vector3D &other)
-        {
-            x += other.x;
-            y += other.y;
-            z += other.z;
+        Vec3& operator += (const Vec3 &v) {
+            x += v.x; y += v.y; z += v.z;
             return *this;
         }
 
-        Vector3D &operator-=(const Vector3D &other)
-        {
-            x -= other.x;
-            y -= other.y;
-            z -= other.z;
-            return *this;
-        }
-
-        Vector3D &operator*=(const Vector3D &other)
-        {
-            x *= other.x;
-            y *= other.y;
-            z *= other.z;
-            return *this;
-        }
-
-        Vector3D &operator*=(double scalar)
-        {
-            x *= scalar;
-            y *= scalar;
-            z *= scalar;
-            return *this;
-        }
-
-        Vector3D &operator/=(const Vector3D &other)
-        {
-            x /= other.x;
-            y /= other.y;
-            z /= other.z;
-            return *this;
-        }
-
-        Vector3D &operator/=(double div)
-        {
-            x /= div;
-            y /= div;
-            z /= div;
-            return *this;
-        }
-
-        double squareLength()
-        {
-            return pow(x, 2) + pow(y, 2) + pow(z, 2);
-        }
-
-        double length()
-        {
-            return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
-        }
-
-        double dot(const Vector3D &other) const
-        {
-            return x * other.x + y + other.y + z + other.z;
-        }
-
-        double sum() const
-        {
-            return x + y + z;
-        }
-    };
-
-    class Point3D
-    {
-    public:
-        double x, y, z;
-        ~Point3D() = default;
-        Point3D()   :   x(0), y(0), z(0) {}
-        Point3D(double x, double y, double z)
-            :   x(x), y(y), z(z) {}
-
-        Point3D operator+(Point3D &other) const
-        {
-            return Point3D(x + other.x, y + other.y, z + other.z);
-        }
-
-        Point3D operator+(Vector3D &other) const
-        {
-            return Point3D(x + other.x, y + other.y, z + other.z);
-        }
-
-        Point3D operator-(const Point3D &other) const
-        {
-            return Point3D(x - other.x, y - other.y, z - other.z);
-        }
-
-        Point3D operator*(const Point3D &other) const
-        {
-            return Point3D(x * other.x, y * other.y, z * other.z);
-        }
-
-        Point3D operator/(const Point3D &other) const
-        {
-            return Point3D(x / other.x, y / other.y, z / other.z);
-        }
-
-        Point3D operator*(double scalar) const
-        {
-            return Point3D(x * scalar, y * scalar, z * scalar);
-        }
-
-        Point3D operator/(double div) const
-        {
-            return Point3D(x / div, y / div, z / div);
-        }
-
-        Point3D &operator+=(const Point3D &other)
-        {
-            x += other.x;
-            y += other.y;
-            z += other.z;
-            return *this;
-        }
-
-        Point3D &operator+=(const Vector3D &other)
-        {
-            x += other.x;
-            y += other.y;
-            z += other.z;
-            return *this;
-        }
-
-        Point3D &operator-=(const Point3D &other)
-        {
-            x -= other.x;
-            y -= other.y;
-            z -= other.z;
-            return *this;
-        }
-
-        Point3D &operator*=(const Point3D &other)
-        {
-            x *= other.x;
-            y *= other.y;
-            z *= other.z;
-            return *this;
-        }
-
-        Point3D &operator*=(double scalar)
-        {
-            x *= scalar;
-            y *= scalar;
-            z *= scalar;
-            return *this;
-        }
-
-        Point3D &operator/=(const Point3D &other)
-        {
-            x /= other.x;
-            y /= other.y;
-            z /= other.z;
-            return *this;
-        }
-
-        Point3D &operator/=(double div)
-        {
-            x /= div;
-            y /= div;
-            z /= div;
-            return *this;
-        }
-
-        double dot(const Point3D &other) const
-        {
-            return x * other.x + y + other.y + z + other.z;
-        }
-
-        double squareLength()
-        {
-            return pow(x, 2) + pow(y, 2) + pow(z, 2);
-        }
-
-        double length()
-        {
-            return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
-        }
-
-        double sum() const
-        {
-            return x + y + z;
+        Vec3 normalize() const {
+            double len = std::sqrt(x*x + y*y + z*z);
+            return Vec3(x/len, y/len, z/len);
         }
     };
 }
 
 #endif /* !__MATH_H__ */
-

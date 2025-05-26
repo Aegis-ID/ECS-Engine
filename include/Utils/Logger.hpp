@@ -14,6 +14,7 @@
     #include <string>
     #include <fstream>
     #include <mutex>
+    #include <cstdio>
 
 namespace Utils
 {
@@ -35,19 +36,18 @@ namespace Utils
         bool _consoleOutput;
         std::ofstream _logFile;
 
-        Logger();
-        ~Logger();
-
         std::string getTimestamp() const;
         std::string logLevelToString(LogLevel level) const;
 
+    protected:
+        Logger();
+        ~Logger();
     public:
         static Logger &getInstance();
+        void destroyInstance();
 
         Logger(const Logger &) = delete;
         Logger &operator=(const Logger &) = delete;
-        Logger(Logger &&) = delete;
-        Logger &operator=(Logger &&) = delete;
 
         void setLogLevel(LogLevel level);
         void setConsoleOutput(bool enable);
@@ -55,26 +55,26 @@ namespace Utils
         void closeLogFile();
 
         template<typename... Args>
-        void log(LogLevel level, const std::string& format, Args... args);
+        void log(LogLevel level, const std::string &format, Args... args);
 
         template<typename... Args>
-        void debug(const std::string& format, Args... args);
+        void debug(const std::string &format, Args... args);
 
         template<typename... Args>
-        void info(const std::string& format, Args... args);
+        void info(const std::string &format, Args... args);
 
         template<typename... Args>
-        void warning(const std::string& format, Args... args);
+        void warning(const std::string &format, Args... args);
 
         template<typename... Args>
-        void error(const std::string& format, Args... args);
+        void error(const std::string &format, Args... args);
 
         template<typename... Args>
-        void fatal(const std::string& format, Args... args);
+        void fatal(const std::string &format, Args... args);
     };
 
     template<typename... Args>
-    void Logger::log(LogLevel level, const std::string& message, Args... args)
+    void Logger::log(LogLevel level, const std::string &message, Args... args)
     {
         if (level < _logLevel)
             return;
@@ -82,6 +82,11 @@ namespace Utils
         std::lock_guard<std::mutex> lock(_mutex);
         std::string timestamp = getTimestamp();
         std::string levelStr = logLevelToString(level);
+
+        #ifdef __GNUC__                 // -> source of this (pas tant que ça en vrai) Dark Magic : 
+        #pragma GCC diagnostic push     // https://stackoverflow.com/questions/3378560/how-to-disable-gcc-warnings-for-a-few-lines-of-code
+        #pragma GCC diagnostic ignored "-Wformat-security"  // Fuck you ubuntu, 3 fucking days of torments bc of u
+        #endif
 
         int size = std::snprintf(nullptr, 0, message.c_str(), args...) + 1;
 
@@ -92,7 +97,11 @@ namespace Utils
         std::snprintf(buf.data(), size, message.c_str(), args...);
         std::string formattedMessage(buf.data(), buf.data() + size - 1);
         std::string logMessage = timestamp + " [" + levelStr + "] " + formattedMessage;
-        
+
+        #ifdef __GNUC__
+        #pragma GCC diagnostic pop
+        #endif
+
         if (_consoleOutput)
             std::cout << logMessage << std::endl;
         if (_logFile.is_open()) {
@@ -102,31 +111,31 @@ namespace Utils
     }
 
     template<typename... Args>
-    void Logger::debug(const std::string& format, Args... args)
+    void Logger::debug(const std::string &format, Args... args)
     {
         log(LogLevel::DEBUG, format, args...);
     }
 
     template<typename... Args>
-    void Logger::info(const std::string& format, Args... args)
+    void Logger::info(const std::string &format, Args... args)
     {
         log(LogLevel::INFO, format, args...);
     }
 
     template<typename... Args>
-    void Logger::warning(const std::string& format, Args... args)
+    void Logger::warning(const std::string &format, Args... args)
     {
         log(LogLevel::WARNING, format, args...);
     }
 
     template<typename... Args>
-    void Logger::error(const std::string& format, Args... args)
+    void Logger::error(const std::string &format, Args... args)
     {
         log(LogLevel::ERROR, format, args...);
     }
 
     template<typename... Args>
-    void Logger::fatal(const std::string& format, Args... args)
+    void Logger::fatal(const std::string &format, Args... args)
     {
         log(LogLevel::FATAL, format, args...);
     }

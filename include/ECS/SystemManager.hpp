@@ -19,62 +19,36 @@ namespace ECS
     class SystemManager
     {
     private:
-        std::vector<std::shared_ptr<ISystem>> _systems;
-        std::unordered_map<std::type_index, std::shared_ptr<ISystem>> _systemMap;
+        std::vector<std::unique_ptr<ISystem>> _systems;
+        std::unordered_map<std::type_index, ISystem *> _systemMap;
     public:
-        template<typename T> std::shared_ptr<T> registerSystem();
-        template<typename T> std::shared_ptr<T> getSystem();
-        void addSystem(std::shared_ptr<ISystem> system);
+        template<typename T> T* registerSystem();
+        template<typename T> T* getSystem();
+        void addSystem(std::unique_ptr<ISystem> system);
         void update(float deltaTime);
     };
 
-    template<typename T> std::shared_ptr<T> SystemManager::registerSystem()
+    template<typename T> T *SystemManager::registerSystem()
     {
         const std::type_index typeIndex = std::type_index(typeid(T));
 
         if (_systemMap.find(typeIndex) != _systemMap.end())
-            return std::static_pointer_cast<T>(_systemMap[typeIndex]);
-        auto system = std::make_shared<T>();
-        _systems.push_back(system);
-        _systemMap[typeIndex] = system;
-        return system;
+            return static_cast<T *>(_systemMap[typeIndex]);
+        auto system = std::make_unique<T>();
+        T *systemPtr = system.get();
+        _systemMap[typeIndex] = systemPtr;
+        _systems.push_back(std::move(system));
+        return systemPtr;
     }
 
-    template<typename T> std::shared_ptr<T> SystemManager::getSystem()
+    template<typename T> T *SystemManager::getSystem()
     {
         const std::type_index typeIndex = std::type_index(typeid(T));
 
         if (_systemMap.find(typeIndex) == _systemMap.end())
             return nullptr;
-        return std::static_pointer_cast<T>(_systemMap[typeIndex]);
+        return static_cast<T *>(_systemMap[typeIndex]);
     }
 }
-
-/*
- * SystemManager handles creation, retrieval, and updating of systems.
- * Systems are responsible for processing entities and implementing game logic.
- *
- * Usage example:
- *
- * // Create system manager
- * ECS::SystemManager systemManager;
- *
- * // Register systems
- * auto movementSystem = systemManager.registerSystem<MovementSystem>();
- * auto collisionSystem = systemManager.registerSystem<CollisionSystem>();
- *
- * // Configure systems
- * movementSystem->setEntityManager(entityManager);
- *
- * // Update all systems
- * float deltaTime = 0.016f; // ~60 FPS
- * systemManager.update(deltaTime);
- *
- * // Get a specific system
- * auto renderSystem = systemManager.getSystem<RenderSystem>();
- * if (renderSystem) {
- *     renderSystem->render();
- * }
- */
 
 #endif /* !__SYSTEMMANAGER_H__ */

@@ -35,9 +35,10 @@ namespace ECS
         template<typename T> ComponentType registerComponent();
         template<typename T> ComponentType getComponentType();
         template<typename T> std::shared_ptr<ComponentPool<T>> getComponentPool();
-        template<typename T> void setComponentOwner(std::shared_ptr<T>, EntityID);
-        template<typename T> std::shared_ptr<T> getEntityComponent(EntityID);
-        template<typename T> void removeEntityComponent(EntityID);
+        template<typename T> void setComponentOwner(ComponentID componentID, EntityID entityID);
+        template<typename T> T *getEntityComponent(EntityID entityID);
+        template<typename T> ComponentID getEntityComponentIndex(EntityID entityID);
+        template<typename T> void removeEntityComponent(EntityID entityID);
     };
 
     template<typename T> ComponentType ComponentManager::registerComponent()
@@ -70,11 +71,8 @@ namespace ECS
     }
 
     template<typename T>
-    void ComponentManager::setComponentOwner(std::shared_ptr<T> component, EntityID entityID)
+    void ComponentManager::setComponentOwner(ComponentID componentID, EntityID entityID)
     {
-        if (!component)
-            return;
-
         const std::type_index typeIndex = std::type_index(typeid(T));
 
         if (_typeMap.find(typeIndex) == _typeMap.end())
@@ -83,11 +81,11 @@ namespace ECS
         ComponentType typeID = _typeMap.at(typeIndex);
         auto pool = std::static_pointer_cast<ComponentPool<T>>(_componentPools.at(typeID));
 
-        _entityComponentMap[typeID][entityID] = pool->getIndex(component);
+        _entityComponentMap[typeID][entityID] = componentID;
     }
 
     template<typename T>
-    std::shared_ptr<T> ComponentManager::getEntityComponent(EntityID entityID)
+    T *ComponentManager::getEntityComponent(EntityID entityID)
     {
         const std::type_index typeIndex = std::type_index(typeid(T));
 
@@ -101,8 +99,26 @@ namespace ECS
             return nullptr;
 
         auto pool = std::static_pointer_cast<ComponentPool<T>>(_componentPools.at(typeID));
+        size_t index = _entityComponentMap[typeID][entityID];
 
-        return pool->getByIndex(_entityComponentMap[typeID][entityID]);
+        return pool->getComponentWithIndex(index);
+    }
+
+    template<typename T>
+    ComponentID ComponentManager::getEntityComponentIndex(EntityID entityID)
+    {
+        const std::type_index typeIndex = std::type_index(typeid(T));
+
+        if (_typeMap.find(typeIndex) == _typeMap.end())
+            throw std::runtime_error("Component type not registered");
+
+        ComponentType typeID = _typeMap.at(typeIndex);
+
+        if (_entityComponentMap.find(typeID) == _entityComponentMap.end() ||
+            _entityComponentMap[typeID].find(entityID) == _entityComponentMap[typeID].end())
+            return static_cast<ComponentID>(-1); // Return invalid index if not found
+
+        return _entityComponentMap[typeID][entityID];
     }
 
     template<typename T> void ComponentManager::removeEntityComponent(EntityID entityID)
@@ -124,32 +140,5 @@ namespace ECS
         std::static_pointer_cast<ComponentPool<T>>(_componentPools.at(typeID))->destroy(index);
     }
 }
-
-/*
- * ComponentManager is responsible for:
- * - Registering component types in the system
- * - Assigning unique IDs to each component type
- * - Creating and managing component pools for each type
- * - Tracking which entities own which components
- * - Providing efficient component access
- *
- * Usage example:
- *
- * // Create a component manager
- * ECS::ComponentManager componentManager;
- *
- * // Register component types
- * componentManager.registerComponent<PositionComponent>();
- * componentManager.registerComponent<HealthComponent>();
- *
- * // Get component type ID
- * ECS::ComponentType positionType = componentManager.getComponentType<PositionComponent>();
- *
- * // Get component pool for direct access
- * auto positionPool = componentManager.getComponentPool<PositionComponent>();
- *
- * // Get a component for a specific entity
- * auto playerPosition = componentManager.getEntityComponent<PositionComponent>(playerID);
- */
 
 #endif /* !__COMPONENTMANAGER_H__ */

@@ -32,6 +32,14 @@ namespace Utils
         return *_instance;
     }
 
+    void Logger::destroyInstance()
+    {
+        if (!_instance)
+            return;
+        closeLogFile();
+        delete(_instance);
+    }
+
     void Logger::setLogLevel(LogLevel level)
     {
         _logLevel = level;
@@ -58,10 +66,12 @@ namespace Utils
     std::string Logger::getTimestamp() const
     {
         auto now = std::chrono::system_clock::now();
+        auto now_time_t = std::chrono::system_clock::to_time_t(now);
         auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
-
         std::tm now_tm;
         std::stringstream ss;
+
+        localtime_r(&now_time_t, &now_tm);
         ss << std::put_time(&now_tm, "%Y-%m-%d %H:%M:%S");
         ss << '.' << std::setfill('0') << std::setw(3) << now_ms.count();
         return ss.str();
